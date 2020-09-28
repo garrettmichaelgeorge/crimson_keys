@@ -1,0 +1,18 @@
+.keyboard {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  width: 50rem;
+  height: 10rem;
+  background-color: var(--keyboard-color);
+  border-radius: 20px;
+}
+
+.keys {
+  display: flex;
+  position: relative;
+  background-color: black;
+  padding: 2px;
+  border-radius: var(--keys-border-radius);
+}
