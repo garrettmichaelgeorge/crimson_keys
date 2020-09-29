@@ -4,19 +4,22 @@ import './Key.css'
 
 function Key (props) {
   const className = () => {
-    let result = ['key']
-    result.push(isBlackKey() && 'black-key')
-    return result.join(' ')
+    let result = 'key'
+    if (isBlackKey()) result += ' black-key'
+    return result
   }
 
   const isBlackKey = () => {
-    return props.note.name.includes('#')
+    return props.noteMidi.toNote().includes('#')
   }
 
   return (
-    <div className={className()}>
-      <p>{props.note.name}<sub>{props.note.octave}</sub></p>
-    </div>
+    <button
+      className={className()}
+      value={props.noteMidi.toNote()}
+      onClick={props.handleClick}
+    >
+    </button>
   )
 }
 

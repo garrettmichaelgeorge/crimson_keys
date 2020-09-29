@@ -3,16 +3,17 @@
   flex-direction: column;
   justify-content: center;
   text-align: center;
-  width: 50rem;
+  width: max-content;
   height: 10rem;
+  padding: 4rem 2rem 2rem 2rem;
   background-color: var(--keyboard-color);
   border-radius: 20px;
 }
 
 .keys {
   display: flex;
-  position: relative;
   background-color: black;
+  margin: 2rem 0 0 0;
   padding: 2px;
   border-radius: var(--keys-border-radius);
 }

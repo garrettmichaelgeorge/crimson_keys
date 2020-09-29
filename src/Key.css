@@ -1,12 +1,15 @@
 .key {
   position: relative;
   border: 1px solid black;
+  /* padding: var(--key-width); */
   width: var(--key-width);
   height: var(--key-height);
   background-color: white;
   cursor: pointer;
   border-radius: var(--keys-border-radius);
+  font-size: var(--font-size-sm);
 }
+
 .key:hover {
   background-color: lightgray;
 }
@@ -14,6 +17,7 @@
 .black-key {
   width: 0;
   margin: 0;
+  padding: 0;
   z-index: 2;
 }
 
@@ -21,11 +25,15 @@
   content: '';
   position: absolute;
   top: 0;
-  left: calc(-0.25 * var(--key-width));
+  left: calc(-0.32 * var(--key-width));
   background-color: black;
   color: gray;
-  width: calc(.5 * var(--key-width));
+  width: calc(.618 * var(--key-width));
   height: calc(.618 * var(--key-height));
   border-radius: var(--keys-border-radius);
+}
+
+.key p {
+  
 }
 

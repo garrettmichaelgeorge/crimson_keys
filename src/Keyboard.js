@@ -1,51 +1,47 @@
-import React from 'react'
-import Sound from './Sound'
+import React, { useState, useEffect, useRef } from 'react'
 
 import Key from './Key'
-import notes from './notes'
-import createNotes from './createNotes'
+import KeyboardControls from './KeyboardControls'
+import getMidiNotesBetween from './util/getMidiNotesBetween'
+import * as Tone from 'tone'
 
 import './Keyboard.css'
 
-class Keyboard extends React.Component {
-  constructor () {
-    super()
-    this.state = {
-      context: new (window.AudioContext || window.webkitAudioContext)(),
-      notes: []
-    }
+const Keyboard = () => {
+  const [isLoaded, setLoaded] = useState(false)
+  const [rangeMIDI] = useState(getMidiNotesBetween(48, 88))
+  const synth = useRef(null)
 
-    this.playSound = this.playSound.bind(this)
+  useEffect(() => {
+    synth.current = new Tone.MembraneSynth().toMaster()
+    setLoaded(true)
+  }, [])
+
+  const handleClick = (e) => {
+    const pitch = e.target.attributes.value.value
+    synth.current.triggerAttackRelease(pitch, '8n')
   }
 
-  componentDidMount () {
-    this.setState({ notes: createNotes() })
-  }
-
-  playSound(note) {
-    const sound = new Sound(this.state.context)
-    sound.play(note.frequency)
-    sound.stop()
-  }
-
-  render () {
-    const keyComponents = this.state.notes.map(note => {
+  const keyComponents = (() => {
+    return rangeMIDI.map((noteMidi, i) => {
       return (
         <Key
-          note={note}
-          onMouseEnter={() => this.playSound(note)}
+          key={i}
+          noteMidi={noteMidi}
+          handleClick={handleClick}
         />
       )
     })
+  })()
 
-    return (
-      <div className='keyboard'>
-        <div className='keys'>
-          {keyComponents}
-        </div>
+  return (
+    <div className='keyboard'>
+      <KeyboardControls />
+      <div className='keys'>
+        {keyComponents}
       </div>
-    )
-  }
+    </div>
+  )
 }
 
 export default Keyboard

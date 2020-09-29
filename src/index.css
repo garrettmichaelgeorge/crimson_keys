@@ -1,8 +1,15 @@
 :root {
   --key-width: 2rem;
-  --key-height: 4rem;
+  --key-height: 8rem;
   --keyboard-color: #f33;
   --keys-border-radius: 4px;
+  /* Typography */
+  --font-family-body: carlmarx, sans-serif;
+  --font-family-headings: reross-quadratic, sans-serif;
+  --font-size: 16px;
+  --font-size-sm: 14px;
+  --font-size-lg: 24px;
+  --line-height: 20px;
 }
 
 body {
@@ -10,6 +17,7 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
+  font-family: var(--font-family-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -18,3 +26,5 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+
