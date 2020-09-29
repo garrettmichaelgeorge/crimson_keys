@@ -1,7 +1,7 @@
 {
   "name": "crimson-keyboard",
   "version": "0.1.0",
-  "homepage": "https://garrettmichaelgeorge.github.io/crimson-keyboard/",
+  "homepage": "https://garrettmichaelgeorge.github.io/crimson-keyboard",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
