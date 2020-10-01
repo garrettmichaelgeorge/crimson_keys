@@ -7,7 +7,7 @@ import './App.css'
 function App () {
   return (
     <div className='App container'>
-      <Header />
+      <Header title='Crimson Keyboard' />
       <main className='main'>
         <Keyboard />
       </main>

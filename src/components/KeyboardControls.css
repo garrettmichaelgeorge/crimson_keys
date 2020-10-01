@@ -1,3 +1,8 @@
 .keyboard-controls {
   
 }
+
+.keyboard-controls legend {
+  font-variant-caps: all-small-caps;
+  letter-spacing: var(--letter-spacing-small-caps);
+}

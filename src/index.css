@@ -3,6 +3,7 @@
   --key-height: 8rem;
   --keyboard-color: #f33;
   --keys-border-radius: 4px;
+
   /* Typography */
   --font-family-body: carlmarx, sans-serif;
   --font-family-headings: reross-quadratic, sans-serif;
@@ -10,6 +11,7 @@
   --font-size-sm: 14px;
   --font-size-lg: 24px;
   --line-height: 20px;
+  --letter-spacing-small-caps: 0.05em;
 }
 
 body {
@@ -25,4 +27,9 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.smcp {
+  font-variant-caps: all-small-caps;
+  letter-spacing: var(--letter-spacing-small-caps);
 }

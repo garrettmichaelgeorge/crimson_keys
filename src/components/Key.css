@@ -1,5 +1,6 @@
 .key {
   position: relative;
+  box-sizing: border-box;
   border: 1px solid black;
   /* padding: var(--key-width); */
   width: var(--key-width);
@@ -8,10 +9,7 @@
   cursor: pointer;
   border-radius: var(--keys-border-radius);
   font-size: var(--font-size-sm);
-}
-
-.key:hover {
-  background-color: lightgray;
+  transition: background-color 200ms ease-out;
 }
 
 .black-key {
@@ -33,7 +31,11 @@
   border-radius: var(--keys-border-radius);
 }
 
-.key p {
-  
+.key:not(.black-key):hover {
+  border: 2px solid white;
 }
 
+.key:not(.black-key):active  {
+  box-sizing: border-box;
+  background-color: lightgray;
+}
