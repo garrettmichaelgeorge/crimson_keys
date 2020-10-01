@@ -1,14 +1,13 @@
 import React from 'react'
+import Header from './components/Header'
+import Keyboard from './components/Keyboard'
+
 import './App.css'
-import Keyboard from './Keyboard'
 
 function App () {
   return (
     <div className='App container'>
-      <header className='header'>
-        <h1 className='h1'>Keyboard</h1>
-        <h6 className='subhead'>Tone.js with React</h6>
-      </header>
+      <Header />
       <main className='main'>
         <Keyboard />
       </main>
