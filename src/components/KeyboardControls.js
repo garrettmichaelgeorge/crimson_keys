@@ -8,17 +8,18 @@ const KeyboardControls = React.memo((props) => {
       <fieldset>
         <legend>Instrument</legend>
         <select
-          name='currentSynth.name'
-          value={props.currentSynth}
+          name='activeSynth.name'
+          value={props.activeSynth}
           onChange={props.handleChange}
         >
           <option value=''>Select an instrument</option>
-          <option value='Synth'>Basic Synth</option>
-          <option value='MembraneSynth'>Membrane Synth</option>
-          <option value='AMSynth'>AM Synth</option>
-          <option value='FMSynth'>FM Synth</option>
+          <option value={props.synth}>Basic Synth</option>
+          <option value={props.membraneSynth}>Membrane Synth</option>
+          <option value={props.amSynth}>AM Synth</option>
+          <option value={props.fmSynth}>FM Synth</option>
         </select>
       </fieldset>
+
       <fieldset>
         <legend>Distortion</legend>
         <label>
@@ -34,6 +35,7 @@ const KeyboardControls = React.memo((props) => {
           Amount
         </label>
       </fieldset>
+
       <fieldset>
         <legend>Reverb</legend>
         <label>
