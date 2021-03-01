@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import Key from './Key'
+import Keys from './Keys'
 import KeyboardControls from './KeyboardControls'
 import getMidiNotesBetween from '../util/getMidiNotesBetween'
 import Loading from './Loading'
@@ -15,12 +15,11 @@ function Keyboard (props) {
   const [currentSynth, setCurrentSynth] = useState('')
 
   // Instruments
+  const activeSynth = useRef()
   const synth = useRef()
   const membraneSynth = useRef()
   const amSynth = useRef()
   const fmSynth = useRef()
-
-  const activeSynth = useRef()
 
   // Audio Effects
   const distortion = useRef()
@@ -37,7 +36,6 @@ function Keyboard (props) {
     fmSynth.current = new Tone.FMSynth().toDestination()
 
     // Select Basic Synth as default instrument
-    // setCurrentSynth(synth.current)
     activeSynth.current = synth.current
 
     // Connect instruments to effects in parallel
@@ -61,58 +59,39 @@ function Keyboard (props) {
 
   useEffect(() => {
     const { decay, predelay, wet } = reverbOptions
+
     reverb.current.set({decay, predelay, wet})
   }, [reverbOptions])
 
   const handleChange = e => {
     const { name, value } = e.target
-    console.log('handling change!')
-    console.log(name)
-    console.log(value)
+
     if (name === 'distortionWet') {
       setDistortionWet(value)
     } else if (name === 'reverbWet' ) {
       setReverbOptions({...reverbOptions, wet: value})
     } else {
-      selectSynth(value)
+      setCurrentSynth(value)
     }
   }
 
   const selectSynth = synthRef => {
-    console.log('selecting synth!')
-    console.log(synthRef)
     setCurrentSynth(synthRef)
-    // switch (synthRef) {
-    //   case 'Synth':
-    //     setCurrentSynth(synth.current)
-    //     break
-    //   case 'MembraneSynth':
-    //     setCurrentSynth(membraneSynth.current)
-    //     break
-    //   case 'AMSynth':
-    //     setCurrentSynth(amSynth.current)
-    //     break
-    //   case 'FMSynth':
-    //     setCurrentSynth(fmSynth.current)
-    //     break
-    //   default:
-    //     return
-    // }
   }
 
   const handleClick = e => {
-    // if (typeof activeSynth !== 'object') return null
+    if (typeof activeSynth !== 'object') return null
 
     const pitch = e.target.attributes.value.value
     const rhythm = '8n'
     activeSynth.current.triggerAttackRelease(pitch, rhythm)
   }
 
-  if (!isLoaded) return <Loading />
-
+  if (!isLoaded) {
+    return <Loading />
+  } else {
     return (
       <section className='keyboard'>
-
         <KeyboardControls
           synth={synth.current}
           membraneSynth={membraneSynth.current}
@@ -124,17 +103,13 @@ function Keyboard (props) {
           reverbOptions={reverbOptions}
         />
 
-        <div className='keys'>
-          {rangeMIDI.map((noteMidi, i) => (
-            <Key
-              key={noteMidi}
-              noteMidi={noteMidi}
-              handleClick={handleClick}
-            />
-          ))}
-        </div>
+        <Keys
+          rangeMIDI={rangeMIDI}
+          handleClick={handleClick}
+        />
       </section>
     )
+  }
 }
 
 export default Keyboard
