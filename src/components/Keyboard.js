@@ -6,13 +6,20 @@ import Loading from './Loading'
 import * as Tone from 'tone'
 import './Keyboard.css'
 
+function useForceUpdate() {
+  const [value, setValue] = useState(0)
+  return () => setValue(value => value + 1)
+}
+
 function Keyboard (props) {
   const [isLoaded, setIsLoaded] = useState(false)
   const [rangeMIDI] = useState(getMidiNotesBetween(48, 72))
-  const [distortionWet, setDistortionWet] = useState(0)
-  const [reverbOptions, setReverbOptions] = useState({decay: 5, predelay: 1, wet: 1})
+  const [distortionOptions, setDistortionOptions] = useState({ wet: 0 })
+  const [reverbOptions, setReverbOptions] = useState({ decay: 5, predelay: 1, wet: 1 })
 
   const [currentSynth, setCurrentSynth] = useState('')
+
+  const forceUpdate = useForceUpdate()
 
   // Instruments
   const activeSynth = useRef()
@@ -21,13 +28,21 @@ function Keyboard (props) {
   const amSynth = useRef()
   const fmSynth = useRef()
 
+  const synths = {
+    activeSynth: activeSynth,
+    synth: synth,
+    membraneSynth: membraneSynth,
+    amSynth: amSynth,
+    fmSynth: fmSynth
+  }
+
   // Audio Effects
   const distortion = useRef()
   const reverb = useRef()
 
   useEffect(() => {
     // Set up effects
-    distortion.current = new Tone.Distortion(0).toDestination()
+    distortion.current = new Tone.Distortion().toDestination()
     reverb.current = new Tone.Reverb().toDestination()
     // Set up instruments
     synth.current = new Tone.Synth()
@@ -53,11 +68,13 @@ function Keyboard (props) {
     }
   }, [])
 
-  useEffect(() => {
-    distortion.current.wet.value = distortionWet
-  }, [distortionWet])
+  useEffect(function syncDistortion() {
+    console.log('Syncing distortion...', distortionOptions)
 
-  useEffect(() => {
+    distortion.current.wet.value = distortionOptions.wet
+  }, [distortionOptions])
+
+  useEffect(function syncReverb() {
     const { decay, predelay, wet } = reverbOptions
 
     reverb.current.set({decay, predelay, wet})
@@ -66,13 +83,15 @@ function Keyboard (props) {
   const handleChange = e => {
     const { name, value } = e.target
 
-    if (name === 'distortionWet') {
-      setDistortionWet(value)
-    } else if (name === 'reverbWet' ) {
-      setReverbOptions({...reverbOptions, wet: value})
+    if (name === 'distortion.wet') {
+      distortion.current.wet.set({ value: value })
+    } else if (name === 'reverb.wet' ) {
+      reverb.current.wet.set({ value: value })
     } else {
       setCurrentSynth(value)
     }
+
+    forceUpdate()
   }
 
   const selectSynth = synthRef => {
@@ -93,16 +112,13 @@ function Keyboard (props) {
     return (
       <section className='keyboard'>
         <KeyboardControls
-          synth={synth.current}
-          membraneSynth={membraneSynth.current}
-          amSynth={amSynth.current}
-          fmSynth={fmSynth.current}
-          activeSynth={activeSynth}
-          handleChange={handleChange}
-          distortionWet={distortionWet}
+          synths={synths}
+          distortionOptions={distortionOptions}
+          distortion={distortion}
           reverbOptions={reverbOptions}
+          reverb={reverb}
+          handleChange={handleChange}
         />
-
         <Keys
           rangeMIDI={rangeMIDI}
           handleClick={handleClick}
@@ -111,5 +127,6 @@ function Keyboard (props) {
     )
   }
 }
+
 
 export default Keyboard

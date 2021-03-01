@@ -5,12 +5,12 @@ import ReverbControl from './ReverbControl'
 
 import './KeyboardControls.css'
 
-const KeyboardControls = React.memo(({ synths, distortionWet, reverbOptions, handleChange }) => {
+const KeyboardControls = React.memo(({ synths, distortion,  reverb, handleChange }) => {
   return (
     <section className='keyboard-controls'>
       <SynthControl synths={synths} handleChange={handleChange} />
-      <DistortionControl distortionWet={distortionWet} handleChange={handleChange} />
-      <ReverbControl reverbOptions={reverbOptions} handleChange={handleChange} />
+      <DistortionControl distortion={distortion} handleChange={handleChange} />
+      <ReverbControl reverb={reverb} handleChange={handleChange} />
     </section>
   )
 })
