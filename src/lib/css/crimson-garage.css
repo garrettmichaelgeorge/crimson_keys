@@ -33,18 +33,15 @@ body {
 
 .container {
   display: flex;
-  flex-direction: row;
+  flex-flow: row wrap-reverse;
   align-items: center;
   min-height: 100vh;
 }
 
-.container > .header, .container > .main {
-  height: 100vh;
-}
-
 .main {
+  height: 100vh;
   display: flex;
-  flex: 3;
+  flex: 3 0 min-content;
   justify-content: center;
   align-items: center;
   background-color: var(--theme-color-lightgray);
@@ -121,5 +118,5 @@ p, ol li, ul li {
 
 .d-none {
   display: none;
-  transition: 350ms ease-in;
+  transition: 300ms ease-in;
 }
