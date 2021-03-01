@@ -1,12 +1,12 @@
 import React from 'react'
+import KeyboardControl from './KeyboardControl'
 
 import './KeyboardControls.css'
 
 const KeyboardControls = React.memo((props) => {
   return (
     <div className='keyboard-controls'>
-      <fieldset>
-        <legend>Instrument</legend>
+      <KeyboardControl name='Instrument'>
         <select
           name='activeSynth.name'
           value={props.activeSynth}
@@ -18,10 +18,9 @@ const KeyboardControls = React.memo((props) => {
           <option value={props.amSynth}>AM Synth</option>
           <option value={props.fmSynth}>FM Synth</option>
         </select>
-      </fieldset>
+      </KeyboardControl>
 
-      <fieldset>
-        <legend>Distortion</legend>
+      <KeyboardControl name='Distortion'>
         <label>
           <input
             type='range'
@@ -34,10 +33,9 @@ const KeyboardControls = React.memo((props) => {
           />
           Amount
         </label>
-      </fieldset>
+      </KeyboardControl>
 
-      <fieldset>
-        <legend>Reverb</legend>
+      <KeyboardControl name="Reverb">
         <label>
           <input
             type='range'
@@ -50,7 +48,7 @@ const KeyboardControls = React.memo((props) => {
           />
           Dry/Wet
         </label>
-      </fieldset>
+      </KeyboardControl>
     </div>
   )
 })
