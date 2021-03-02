@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 export default function KeyboardControlSlider({
   handleChange,
@@ -7,20 +7,20 @@ export default function KeyboardControlSlider({
   label,
   min,
   max,
-  step
+  step,
 }) {
   return (
     <label>
       <input
-        type='range'
+        type="range"
         name={name}
         value={value}
-        min={min ? min : '0'}
-        max={max ? max : '1.00'}
-        step={step ? step : '0.01'}
+        min={min ? min : "0"}
+        max={max ? max : "1.00"}
+        step={step ? step : "0.01"}
         onChange={handleChange}
       />
       {label}
     </label>
-  )
+  );
 }
