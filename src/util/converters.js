@@ -3,7 +3,7 @@ function mToF(midi) {
 }
 
 function fToM(f) {
-  return 12 * Math.log(2, f / 440) + 69
+  return 12 * Math.log(2, f / 440) + 69;
 }
 
-export { mToF, fToM }
+export { mToF, fToM };
