@@ -1,25 +1,21 @@
-import React from 'react'
+import React from "react";
 
-import './Key.css'
+import "./Key.css";
 
-function Key ({
-  noteMidi,
-  handleClick,
-  handleKeyDown
-}) {
+function Key({ noteMidi, handleClick, handleKeyDown }) {
   const className = () => {
-    let result = 'key'
-    if (isBlackKey()) result += ' black-key'
-    return result
-  }
+    let result = "key";
+    if (isBlackKey()) result += " black-key";
+    return result;
+  };
 
   const isBlackKey = () => {
-    return noteMidi.toNote().includes('#')
-  }
+    return noteMidi.toNote().includes("#");
+  };
 
   const noteFrequency = () => {
-    return noteMidi.toNote()
-  }
+    return noteMidi.toNote();
+  };
 
   return (
     <button
@@ -27,9 +23,8 @@ function Key ({
       value={noteFrequency()}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
-    >
-    </button>
-  )
+    ></button>
+  );
 }
 
-export default Key
+export default Key;
