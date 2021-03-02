@@ -1,72 +1,72 @@
 const notes = [
   // C4...
   {
-    name: 'a',
+    name: "a",
     octave: 4,
-    frequency: 440.0
+    frequency: 440.0,
   },
   {
-    name: 'a#',
+    name: "a#",
     octave: 4,
-    frequency: 466.16
+    frequency: 466.16,
   },
   {
-    name: 'b',
+    name: "b",
     octave: 4,
-    frequency: 493.88
+    frequency: 493.88,
   },
 
   // C5
   {
-    name: 'c',
+    name: "c",
     octave: 5,
-    frequency: 523.25
+    frequency: 523.25,
   },
   {
-    name: 'c#',
+    name: "c#",
     octave: 5,
-    frequency: 554.37
+    frequency: 554.37,
   },
   {
-    name: 'd',
+    name: "d",
     octave: 5,
-    frequency: 587.33
+    frequency: 587.33,
   },
   {
-    name: 'd#',
+    name: "d#",
     octave: 5,
-    frequency: 622.25
+    frequency: 622.25,
   },
   {
-    name: 'e',
+    name: "e",
     octave: 5,
-    frequency: 659.25
+    frequency: 659.25,
   },
   {
-    name: 'f',
+    name: "f",
     octave: 5,
-    frequency: 698.46
+    frequency: 698.46,
   },
   {
-    name: 'f#',
+    name: "f#",
     octave: 5,
-    frequency: 739.99
+    frequency: 739.99,
   },
   {
-    name: 'g',
+    name: "g",
     octave: 5,
-    frequency: 783.99
+    frequency: 783.99,
   },
   {
-    name: 'g#',
+    name: "g#",
     octave: 5,
-    frequency: 830.61
+    frequency: 830.61,
   },
   {
-    name: 'a',
+    name: "a",
     octave: 5,
-    frequency: 880.0
-  }
-]
+    frequency: 880.0,
+  },
+];
 
-export default notes
+export default notes;
