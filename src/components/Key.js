@@ -1,6 +1,6 @@
 import React from "react";
 
-import "./Key.css";
+import "../styles/Key.css";
 
 function Key({ noteMidi, handleClick, handleKeyDown }) {
   const className = () => {

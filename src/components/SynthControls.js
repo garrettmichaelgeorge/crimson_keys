@@ -4,7 +4,7 @@ import KeyboardControlSlider from "./KeyboardControlSlider";
 
 export default function SynthControls({ handleChange, synth }) {
   return (
-    <KeyboardControlGroup name="Instrument">
+    <KeyboardControlGroup name="Envelope">
       <KeyboardControlSlider
         name="synth.envelope.attack"
         label="A"

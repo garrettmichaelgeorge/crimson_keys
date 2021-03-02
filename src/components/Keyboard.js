@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
+import * as Tone from "tone";
 import Keys from "./Keys";
 import KeyboardControls from "./KeyboardControls";
 import getMidiNotesBetween from "../util/getMidiNotesBetween";
 import Loading from "./Loading";
 import useForceUpdate from "../hooks/useForceUpdate";
-import * as Tone from "tone";
-import "./Keyboard.css";
-
 import { keyMidiMappings } from "../util";
+import "../styles/Keyboard.css";
 
 export default function Keyboard() {
   const [isLoaded, setIsLoaded] = useState(false);

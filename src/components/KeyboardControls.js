@@ -3,7 +3,7 @@ import SynthControls from "./SynthControls";
 import DistortionControls from "./DistortionControls";
 import ReverbControls from "./ReverbControls";
 
-import "./KeyboardControls.css";
+import "../styles/KeyboardControls.css";
 
 const KeyboardControls = React.memo(
   ({ synth, distortion, reverb, handleChange }) => {

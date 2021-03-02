@@ -9,11 +9,17 @@ html {
   --m-std: 1rem;
   --m-sm: 0.5rem;
   --theme-color-1: crimson;
-  --theme-color-lightgray: #EEE;
-  --theme-color-medgray: #DDD;
-  --theme-color-darkgray: #CCC;
+  --theme-color-lightgray: #EEEEEE;
+  --theme-color-medgray: #DDDDDD;
+  --theme-color-darkgray: #CCCCCC;
   --theme-color-font-body: #333;
   --theme-border-radius: 4px;
+}
+
+html {
+	box-sizing: border-box;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
 
 body {
@@ -24,22 +30,30 @@ body {
   max-width: 100vw;
 }
 
+.container {
+  display: flex;
+  flex-flow: row wrap-reverse;
+  justify-content: center;
+  align-items: center;
+  min-height: 100%;
+  max-width: 100vw;
+}
+
 .header {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   padding: 0 2rem;
+  width: 100%;
 }
 
-.container {
-  display: flex;
-  flex-flow: row wrap-reverse;
-  align-items: center;
-  min-height: 100vh;
+.header-text {
+  margin: 2rem 1rem;
 }
 
 .main {
-  height: 100vh;
+  min-height: 100%;
   display: flex;
   flex: 3 0 min-content;
   justify-content: center;
