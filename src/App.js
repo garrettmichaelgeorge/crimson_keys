@@ -1,7 +1,7 @@
 import React, { useContext, useReducer } from "react";
-import synthReducer from "./reducers/synthReducer";
-import SynthContext from "./contexts/context";
 import { Header, Keyboard, AudioEngine } from "./components";
+import synthReducer from "./reducers/synthReducer";
+import SynthContext from "./contexts/SynthContext";
 
 import "./App.css";
 
