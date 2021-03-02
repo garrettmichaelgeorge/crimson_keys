@@ -2,7 +2,11 @@ import React from 'react'
 
 import './Key.css'
 
-function Key (props) {
+function Key ({
+  noteMidi,
+  handleClick,
+  handleKeyDown
+}) {
   const className = () => {
     let result = 'key'
     if (isBlackKey()) result += ' black-key'
@@ -10,14 +14,19 @@ function Key (props) {
   }
 
   const isBlackKey = () => {
-    return props.noteMidi.toNote().includes('#')
+    return noteMidi.toNote().includes('#')
+  }
+
+  const noteFrequency = () => {
+    return noteMidi.toNote()
   }
 
   return (
     <button
       className={className()}
-      value={props.noteMidi.toNote()}
-      onClick={props.handleClick}
+      value={noteFrequency()}
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
     >
     </button>
   )

@@ -1,23 +1,17 @@
-import React, { useState, useEffect, useRef } from 'react'
-import Keys from './Keys'
-import KeyboardControls from './KeyboardControls'
-import getMidiNotesBetween from '../util/getMidiNotesBetween'
-import Loading from './Loading'
-import * as Tone from 'tone'
-import './Keyboard.css'
+import React, { useState, useEffect, useRef } from "react"
+import Keys from "./Keys"
+import KeyboardControls from "./KeyboardControls"
+import getMidiNotesBetween from "../util/getMidiNotesBetween"
+import Loading from "./Loading"
+import useForceUpdate from "../hooks/useForceUpdate"
+import * as Tone from "tone"
+import "./Keyboard.css"
 
-function useForceUpdate() {
-  const [value, setValue] = useState(0)
-  return () => setValue(value => value + 1)
-}
-
-function Keyboard (props) {
+export default function Keyboard (props) {
   const [isLoaded, setIsLoaded] = useState(false)
   const [rangeMIDI] = useState(getMidiNotesBetween(48, 72))
-  const [distortionOptions, setDistortionOptions] = useState({ wet: 0 })
-  const [reverbOptions, setReverbOptions] = useState({ decay: 5, predelay: 1, wet: 1 })
-
-  const [currentSynth, setCurrentSynth] = useState('')
+  const [currentSynth, setCurrentSynth] = useState("")
+  const [attackLength, setAttackLength] = useState("8n")
 
   const forceUpdate = useForceUpdate()
 
@@ -40,53 +34,87 @@ function Keyboard (props) {
   const distortion = useRef()
   const reverb = useRef()
 
-  useEffect(() => {
-    // Set up effects
-    distortion.current = new Tone.Distortion().toDestination()
-    reverb.current = new Tone.Reverb().toDestination()
-    // Set up instruments
-    synth.current = new Tone.Synth()
-    membraneSynth.current = new Tone.MembraneSynth().toDestination()
-    amSynth.current = new Tone.AMSynth().toDestination()
-    fmSynth.current = new Tone.FMSynth().toDestination()
+  useEffect(function initTone() {
+    const instruments = [synth, membraneSynth, amSynth, fmSynth]
 
-    // Select Basic Synth as default instrument
-    activeSynth.current = synth.current
-
-    // Connect instruments to effects in parallel
-    const instruments = [synth.current, membraneSynth.current, amSynth.current, fmSynth.current]
-    instruments.forEach(instrument => {
-      instrument.fan(distortion.current, reverb.current)
-    })
-
+    initEffects()
+    initInstruments()
+    connectInstruments(instruments)
     setIsLoaded(true)
 
     return () => {
-      instruments.forEach(audioNode => {
-        audioNode.dispose()
+      disposeInstruments(instruments)
+    }
+
+    function initEffects() {
+      distortion.current = new Tone.Distortion({
+        distortion: 1,
+        oversample: "2x",
+        wet: 0.0
+      }).toDestination()
+
+      reverb.current = new Tone.Reverb({
+        decay: 5,
+        predelay: 1,
+        wet: 1
+      }).toDestination()
+    }
+
+    function initInstruments() {
+      synth.current = new Tone.Synth({
+        "oscillator": {
+          "type": "fatsine",
+          "count": 3,
+          "spread": 30
+        },
+        "envelope": {
+          "attack": 0.001,
+          "decay": 0.1,
+          "sustain": 0.5,
+          "release": 0.1,
+          "attackCurve": "exponential"
+        }
       })
+      membraneSynth.current = new Tone.MembraneSynth().toDestination()
+      amSynth.current = new Tone.AMSynth().toDestination()
+      fmSynth.current = new Tone.FMSynth().toDestination()
+
+
+      instrumentDefault()
+    }
+
+    function instrumentDefault() {
+      activeSynth.current = synth.current
+    }
+
+    function connectInstruments(instruments) {
+      instruments.forEach(instrument => connectInstrument(instrument))
+    }
+
+    function connectInstrument(instrument) {
+      instrument.current.fan(distortion.current, reverb.current)
+    }
+
+
+    function disposeInstruments(instruments) {
+      instruments.forEach(instrument => disposeInstrument(instrument))
+    }
+
+    function disposeInstrument(instrument) {
+      instrument.current.dispose()
     }
   }, [])
-
-  useEffect(function syncDistortion() {
-    console.log('Syncing distortion...', distortionOptions)
-
-    distortion.current.wet.value = distortionOptions.wet
-  }, [distortionOptions])
-
-  useEffect(function syncReverb() {
-    const { decay, predelay, wet } = reverbOptions
-
-    reverb.current.set({decay, predelay, wet})
-  }, [reverbOptions])
 
   const handleChange = e => {
     const { name, value } = e.target
 
-    if (name === 'distortion.wet') {
-      distortion.current.wet.set({ value: value })
-    } else if (name === 'reverb.wet' ) {
-      reverb.current.wet.set({ value: value })
+    if (name === "distortion.wet") {
+      distortion.current.wet.set({ value: Number(value) })
+    } else if (name === "reverb.wet" ) {
+      reverb.current.wet.set({ value: Number(value) })
+    } else if (name === "reverb.decay" ) {
+      console.log(reverb.current, value)
+      reverb.current.set({ decay: Number(value) })
     } else {
       setCurrentSynth(value)
     }
@@ -99,34 +127,37 @@ function Keyboard (props) {
   }
 
   const handleClick = e => {
-    if (typeof activeSynth !== 'object') return null
+    if (typeof activeSynth !== "object") return null
 
     const pitch = e.target.attributes.value.value
-    const rhythm = '8n'
-    activeSynth.current.triggerAttackRelease(pitch, rhythm)
+    activeSynth.current.triggerAttackRelease(pitch, attackLength)
+  }
+
+  const handleKeyDown = e => {
+    e.preventDefault()
+    console.log(e.charCode)
+  }
+
+  const keyMappings = {
   }
 
   if (!isLoaded) {
     return <Loading />
   } else {
     return (
-      <section className='keyboard'>
+      <section className="keyboard">
         <KeyboardControls
           synths={synths}
-          distortionOptions={distortionOptions}
           distortion={distortion}
-          reverbOptions={reverbOptions}
           reverb={reverb}
           handleChange={handleChange}
         />
         <Keys
           rangeMIDI={rangeMIDI}
           handleClick={handleClick}
+          handleKeyDown={handleKeyDown}
         />
       </section>
     )
   }
 }
-
-
-export default Keyboard
