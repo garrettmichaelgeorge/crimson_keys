@@ -1,9 +1,7 @@
-import React, { useContext, useReducer, useEffect } from "react";
-import Header from "./components/Header";
-import Keyboard from "./components/Keyboard";
+import React, { useContext, useReducer } from "react";
 import synthReducer from "./reducers/synthReducer";
 import SynthContext from "./contexts/context";
-import AudioEngine from "./components/AudioEngine";
+import { Header, Keyboard, AudioEngine } from "./components";
 
 import "./App.css";
 
