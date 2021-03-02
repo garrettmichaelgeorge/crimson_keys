@@ -49,7 +49,7 @@ body {
 }
 
 .header-text {
-  margin: 2rem 1rem;
+  margin: 1rem 1rem;
 }
 
 .main {
@@ -67,6 +67,10 @@ body {
 
 .card {
   margin: 0 0 2rem 0;
+}
+
+fieldset {
+  margin-bottom: 0.5rem;
 }
 
 .btn {
