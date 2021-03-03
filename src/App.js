@@ -1,14 +1,13 @@
 import React from "react";
-import { Header, Keyboard } from "./components";
+import { Header, Keyboard, Main } from "./components";
 
 function App() {
   return (
     <div className="container">
       <Header title="Crimson Keys" />
-
-      <main className="main">
+      <Main>
         <Keyboard />
-      </main>
+      </Main>
     </div>
   );
 }

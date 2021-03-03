@@ -11,3 +11,4 @@ export { default as KeyboardControlGroup } from "./KeyboardControlGroup";
 export { default as Key } from "./Key";
 export { default as Keys } from "./Keys";
 export { default as Sound } from "./Sound";
+export { default as Main } from "./Main";
