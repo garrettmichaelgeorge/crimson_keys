@@ -1,18 +1,9 @@
-import React, { useEffect } from "react";
-import Key from "./Key";
+import React from "react";
 
-export default function Keys({ rangeMIDI, handleClick }) {
-  const keys = () => {
-    return rangeMIDI.map((noteMidi, _i) => key(noteMidi));
-  };
-
-  const key = noteMidi => {
-    return <Key key={noteMidi} noteMidi={noteMidi} handleClick={handleClick} />;
-  };
-
+export default function Keys({ children }) {
   return (
     <section id="keys" className="keys">
-      {keys()}
+      {children}
     </section>
   );
 }

@@ -1,12 +1,12 @@
-import React from "react";
-import { Header, Keyboard, Main } from "./components";
+import React, { createContext } from "react";
+import { Header, Main, AudioGUI } from "./components";
 
 function App() {
   return (
     <div className="container">
       <Header title="Crimson Keys" />
       <Main>
-        <Keyboard />
+        <AudioGUI />
       </Main>
     </div>
   );

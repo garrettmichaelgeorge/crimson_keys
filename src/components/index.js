@@ -1,4 +1,5 @@
 export { default as AudioEngine } from "./AudioEngine";
+export { default as AudioGUI } from "./AudioGUI";
 export { default as Keyboard } from "./Keyboard";
 export { default as KeyboardControls } from "./KeyboardControls";
 export { default as KeyboardControlSlider } from "./KeyboardControlSlider";
