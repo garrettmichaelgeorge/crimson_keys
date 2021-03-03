@@ -5,4 +5,9 @@
 .keyboard-controls legend {
   font-variant-caps: all-small-caps;
   letter-spacing: var(--letter-spacing-small-caps);
+  cursor: default;
+}
+
+.keyboard-controls fieldset {
+  margin-bottom: 0.5rem;
 }

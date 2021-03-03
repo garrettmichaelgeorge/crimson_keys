@@ -1,105 +1,73 @@
 import React, { useState, useEffect, useRef } from "react";
 import * as Tone from "tone";
-import Keys from "./Keys";
-import KeyboardControls from "./KeyboardControls";
 import getMidiNotesBetween from "../util/getMidiNotesBetween";
-import Loading from "./Loading";
-import useForceUpdate from "../hooks/useForceUpdate";
+import { Loading, KeyboardControls, Keys } from ".";
+import { useForceUpdate } from "../hooks";
 import { keyMidiMappings } from "../util";
+import {
+  synthConfig,
+  distortionConfig,
+  reverbConfig,
+  feedbackDelayConfig,
+} from "../data";
+
 import "../styles/Keyboard.css";
 
 export default function Keyboard() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [rangeMIDI] = useState(getMidiNotesBetween(48, 72));
   const [attackLength, setAttackLength] = useState("8n");
-
   const forceUpdate = useForceUpdate();
-
-  // Instruments
-  const activeSynth = useRef();
   const synth = useRef();
-  const membraneSynth = useRef();
-  const amSynth = useRef();
-  const fmSynth = useRef();
-
-  const synths = {
-    activeSynth: activeSynth,
-    synth: synth,
-    membraneSynth: membraneSynth,
-    amSynth: amSynth,
-    fmSynth: fmSynth,
-  };
-
-  // Audio Effects
   const distortion = useRef();
   const reverb = useRef();
+  const feedbackDelay = useRef();
 
   useEffect(function initTone() {
-    const instruments = [synth, membraneSynth, amSynth, fmSynth];
-
     initEffects();
-    initInstruments();
-    connectInstruments(instruments);
+    initSynth();
+    connectSynth(
+      synth.current,
+      distortion.current,
+      reverb.current,
+      feedbackDelay.current
+    );
     setIsLoaded(true);
 
     return () => {
-      disposeInstruments(instruments);
+      disposeEach(
+        synth.current,
+        distortion.current,
+        reverb.current,
+        feedbackDelay.current
+      );
     };
 
     function initEffects() {
-      distortion.current = new Tone.Distortion({
-        distortion: 1,
-        oversample: "2x",
-        wet: 0.0,
-      }).toDestination();
+      distortion.current = new Tone.Distortion(
+        distortionConfig.standard
+      ).toDestination();
 
-      reverb.current = new Tone.Reverb({
-        decay: 5,
-        predelay: 1,
-        wet: 1,
-      }).toDestination();
+      reverb.current = new Tone.Reverb(reverbConfig.standard).toDestination();
+      feedbackDelay.current = new Tone.FeedbackDelay(
+        feedbackDelayConfig.standard
+      ).toDestination();
     }
 
-    function initInstruments() {
-      synth.current = new Tone.Synth({
-        oscillator: {
-          type: "fatsine",
-          count: 3,
-          spread: 30,
-        },
-        envelope: {
-          attack: 0.001,
-          decay: 0.1,
-          sustain: 0.5,
-          release: 0.1,
-          attackCurve: "exponential",
-        },
-      });
-      membraneSynth.current = new Tone.MembraneSynth().toDestination();
-      amSynth.current = new Tone.AMSynth().toDestination();
-      fmSynth.current = new Tone.FMSynth().toDestination();
-
-      instrumentDefault();
+    function initSynth() {
+      synth.current = new Tone.Synth(synthConfig.fatsawtooth);
     }
 
-    function instrumentDefault() {
-      activeSynth.current = synth.current;
+    function connectSynth(synth, ...effects) {
+      synth.fan(...effects);
     }
 
-    function connectInstruments(instruments) {
-      instruments.forEach(instrument => connectInstrument(instrument));
+    function disposeSynth(synth) {
+      synth.dispose();
     }
 
-    function connectInstrument(instrument) {
-      instrument.current.fan(distortion.current, reverb.current);
-    }
-
-    function disposeInstruments(instruments) {
-      instruments.forEach(instrument => disposeInstrument(instrument));
-    }
-
-    function disposeInstrument(instrument) {
-      instrument.current.dispose();
+    function disposeEach(...audioNodes) {
+      audioNodes.forEach(node => node.dispose());
     }
   }, []);
 
@@ -117,13 +85,13 @@ export default function Keyboard() {
     if (!isPlayableKey(e.which)) return;
 
     const pitch = Tone.Frequency(keyMidiMappings[e.which], "midi");
-    activeSynth.current.triggerAttack(pitch);
+    synth.current.triggerAttack(pitch);
   };
 
   const handleKeyUp = e => {
     if (!isPlayableKey(e.which)) return;
 
-    activeSynth.current.triggerRelease();
+    synth.current.triggerRelease();
   };
 
   const isPlayableKey = keyWhich => {
@@ -131,10 +99,10 @@ export default function Keyboard() {
   };
 
   const handleClick = e => {
-    if (typeof activeSynth !== "object") return null;
+    if (typeof synth !== "object") return null;
 
     const pitch = e.target.attributes.value.value;
-    activeSynth.current.triggerAttackRelease(pitch, attackLength);
+    synth.current.triggerAttackRelease(pitch, attackLength);
   };
 
   const handleChange = e => {
