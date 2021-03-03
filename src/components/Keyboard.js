@@ -1,19 +1,11 @@
-import React, { useState, useEffect, useRef } from "react";
-import { getMidiNotesBetween } from "../util";
+import React from "react";
 import { KeyboardControls, Keys, Key } from ".";
-import {
-  synthConfig,
-  distortionConfig,
-  reverbConfig,
-  feedbackDelayConfig,
-} from "../data";
 
 import "../styles/Keyboard.css";
 
-export default function Keyboard({ controls, handleClick }) {
-  const [rangeMIDI] = useState(getMidiNotesBetween(48, 72));
+export default function Keyboard({ controls, handleClick, rangeMidi }) {
   const keys = () => {
-    return rangeMIDI.map((noteMidi, _i) => key(noteMidi));
+    return rangeMidi.map((noteMidi, _i) => key(noteMidi));
   };
 
   const key = noteMidi => {
@@ -23,10 +15,7 @@ export default function Keyboard({ controls, handleClick }) {
   return (
     <section className="keyboard">
       <KeyboardControls>{controls}</KeyboardControls>
-
-      <Keys rangeMIDI={rangeMIDI} handleClick={handleClick}>
-        {keys()}
-      </Keys>
+      <Keys>{keys()}</Keys>
     </section>
   );
 }

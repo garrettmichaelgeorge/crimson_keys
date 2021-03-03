@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
 import * as Tone from "tone";
 import { keyMidiMappings, getMidiNotesBetween } from "../util";
 import { useForceUpdate } from "../hooks";
@@ -17,17 +17,18 @@ import {
 } from "../data";
 
 export default function AudioGUI() {
-  const [isLoaded, setIsLoaded] = React.useState(false);
-  const [attackLength, setAttackLength] = React.useState("8n");
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [attackLength, setAttackLength] = useState("8n");
+  const [rangeMidi] = useState(getMidiNotesBetween(48, 72));
 
   const forceUpdate = useForceUpdate();
 
-  const synth = React.useRef();
-  const distortion = React.useRef();
-  const reverb = React.useRef();
-  const feedbackDelay = React.useRef();
+  const synth = useRef();
+  const distortion = useRef();
+  const reverb = useRef();
+  const feedbackDelay = useRef();
 
-  React.useEffect(function initTone() {
+  useEffect(function initTone() {
     initEffects();
     initSynth();
     connectSynth(
@@ -75,7 +76,7 @@ export default function AudioGUI() {
     }
   }, []);
 
-  React.useEffect(function addKeyboardListener() {
+  useEffect(function addKeyboardListener() {
     window.addEventListener("keydown", e => handleKeyDown(e));
     window.addEventListener("keyup", e => handleKeyUp(e));
 
@@ -138,6 +139,7 @@ export default function AudioGUI() {
   } else {
     return (
       <Keyboard
+        rangeMidi={rangeMidi}
         handleClick={handleClick}
         controls={
           <>
