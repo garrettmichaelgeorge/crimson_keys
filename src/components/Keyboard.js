@@ -3,7 +3,7 @@ import { KeyboardControls, Keys, Key } from ".";
 
 import "../styles/Keyboard.css";
 
-export default function Keyboard({ controls, handleClick, rangeMidi }) {
+const Keyboard = React.memo(({ controls, handleClick, rangeMidi }) => {
   const keys = () => {
     return rangeMidi.map((noteMidi, _i) => key(noteMidi));
   };
@@ -18,4 +18,6 @@ export default function Keyboard({ controls, handleClick, rangeMidi }) {
       <Keys>{keys()}</Keys>
     </section>
   );
-}
+});
+
+export default Keyboard;

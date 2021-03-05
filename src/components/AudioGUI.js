@@ -71,23 +71,27 @@ export default function AudioGUI() {
     [synth]
   );
 
-  const handleClick = e => {
-    if (typeof synth !== "object") return null;
+  const handleClick = useCallback(
+    e => {
+      if (typeof synth !== "object") return null;
 
-    const pitch = e.target.attributes.value.value;
-    synth.current.triggerAttackRelease(pitch, attackLength);
-  };
+      const pitch = e.target.attributes.value.value;
+      synth.current.triggerAttackRelease(pitch, attackLength);
+    },
+    [synth]
+  );
 
   const handleChange = useCallback(
     e => {
-      const { name, value } = e.target;
-
-      // HACK: make this dynamic, e.g.
+      // HACK
+      // TODO: make this dynamic, e.g.
       // const updateAudioEffect = (name, value) => {
       //   const [foo, bar, ...baz] = name.split(".");
       //   Function(`${name}.current.set({${baz}: ${value}})`);
       // };
       // updateAudioEffect(name, value)
+
+      const { name, value } = e.target;
 
       if (name === "distortion.wet") {
         distortion.current.wet.set({ value: Number(value) });

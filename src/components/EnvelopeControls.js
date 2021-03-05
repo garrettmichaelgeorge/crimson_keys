@@ -2,7 +2,7 @@ import React from "react";
 import KeyboardControlGroup from "./KeyboardControlGroup";
 import KeyboardControlSlider from "./KeyboardControlSlider";
 
-export default function EnvelopeControls({ handleChange, synth }) {
+const EnvelopeControls = React.memo(({ handleChange, synth }) => {
   return (
     <KeyboardControlGroup name="Envelope">
       <KeyboardControlSlider
@@ -39,4 +39,6 @@ export default function EnvelopeControls({ handleChange, synth }) {
       />
     </KeyboardControlGroup>
   );
-}
+});
+
+export default EnvelopeControls;

@@ -1,13 +1,12 @@
-import React from 'react'
+import React from "react";
 
-export default function KeyboardControlGroup({ name, children }) {
+const KeyboardControlGroup = React.memo(({ name, children }) => {
   return (
-    <fieldset
-      id="KeyboardControlGroup{name}"
-      className="keyboard-control"
-    >
+    <fieldset id="KeyboardControlGroup{name}" className="keyboard-control">
       <legend>{name}</legend>
       {children}
     </fieldset>
-  )
-}
+  );
+});
+
+export default KeyboardControlGroup;
