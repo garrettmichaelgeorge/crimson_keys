@@ -43,22 +43,22 @@ export default function AudioGUI() {
 
   useEffect(
     function addKeyboardListener() {
-      function handleKeyDown(e) {
+      const handleKeyDown = e => {
         if (!isPlayableKey(e.which)) return;
 
         const pitch = Tone.Frequency(keyMidiMappings[e.which], "midi");
         synth.current.triggerAttack(pitch);
-      }
+      };
 
-      function handleKeyUp(e) {
+      const handleKeyUp = e => {
         if (!isPlayableKey(e.which)) return;
 
         synth.current.triggerRelease();
-      }
+      };
 
-      function isPlayableKey(keyWhich) {
+      const isPlayableKey = keyWhich => {
         return typeof keyMidiMappings[keyWhich] !== undefined;
-      }
+      };
 
       window.addEventListener("keydown", e => handleKeyDown(e));
       window.addEventListener("keyup", e => handleKeyUp(e));

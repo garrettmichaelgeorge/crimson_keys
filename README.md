@@ -2,7 +2,9 @@
 
 A browser-based interactive musical keyboard built with React and Tone.js.
 
-Play it live at (https://crimsonkeys.garrettgeorge.dev).
+Play it live at (https://crimsonkeys.garrettgeorge.dev)!
+
+![Crimson Keys](/screenshots/main.png)
 
 ## Features
 
