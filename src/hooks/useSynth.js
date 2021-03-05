@@ -4,13 +4,14 @@ export default function useSynth(aSynth, callback = null) {
   const synth = useRef();
 
   useEffect(() => {
+    console.log("Using synth!");
     synth.current = aSynth;
     if (callback) callback();
 
     return () => {
       synth.current.dispose();
     };
-  }, [aSynth]);
+  });
 
   return synth;
 }

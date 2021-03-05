@@ -1,10 +1,10 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import * as Tone from "tone";
 import { keyMidiMappings, getMidiNotesBetween } from "../util";
-import { useForceUpdate } from "../hooks";
+import { useForceUpdate, useAudioNode } from "../hooks";
 import {
   Keyboard,
-  SynthControls,
+  EnvelopeControls,
   DistortionControls,
   ReverbControls,
   Loading,
@@ -18,90 +18,58 @@ import {
 
 export default function AudioGUI() {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [attackLength, setAttackLength] = useState("8n");
+  const [attackLength] = useState("8n");
   const [rangeMidi] = useState(getMidiNotesBetween(48, 72));
 
   const forceUpdate = useForceUpdate();
+  const synth = useAudioNode(new Tone.Synth(synthConfig.fatsawtooth));
+  const distortion = useAudioNode(
+    new Tone.Distortion(distortionConfig.standard)
+  );
+  const reverb = useAudioNode(new Tone.Reverb(reverbConfig.standard));
+  const feedbackDelay = useAudioNode(
+    new Tone.FeedbackDelay(feedbackDelayConfig.standard)
+  );
 
-  const synth = useRef();
-  const distortion = useRef();
-  const reverb = useRef();
-  const feedbackDelay = useRef();
-
-  useEffect(function initTone() {
-    initEffects();
-    initSynth();
-    connectSynth(
-      synth.current,
+  useEffect(function chainAudioNodes() {
+    synth.current.chain(
       distortion.current,
+      feedbackDelay.current,
       reverb.current,
-      feedbackDelay.current
+      Tone.Destination
     );
     setIsLoaded(true);
+  });
 
-    return () => {
-      disposeEach(
-        synth.current,
-        distortion.current,
-        reverb.current,
-        feedbackDelay.current
-      );
-    };
+  useEffect(
+    function addKeyboardListener() {
+      function handleKeyDown(e) {
+        if (!isPlayableKey(e.which)) return;
 
-    function initEffects() {
-      distortion.current = new Tone.Distortion(
-        distortionConfig.standard
-      ).toDestination();
+        const pitch = Tone.Frequency(keyMidiMappings[e.which], "midi");
+        synth.current.triggerAttack(pitch);
+      }
 
-      reverb.current = new Tone.Reverb(reverbConfig.standard).toDestination();
-      feedbackDelay.current = new Tone.FeedbackDelay(
-        feedbackDelayConfig.standard
-      ).toDestination();
-    }
+      function handleKeyUp(e) {
+        if (!isPlayableKey(e.which)) return;
 
-    function initSynth() {
-      synth.current = new Tone.Synth(synthConfig.fatsawtooth);
-    }
+        synth.current.triggerRelease();
+      }
 
-    function connectSynth(synth, ...effects) {
-      synth.fan(...effects);
-    }
+      function isPlayableKey(keyWhich) {
+        return typeof keyMidiMappings[keyWhich] !== undefined;
+      }
 
-    function disposeSynth(synth) {
-      synth.dispose();
-    }
+      window.addEventListener("keydown", e => handleKeyDown(e));
+      window.addEventListener("keyup", e => handleKeyUp(e));
 
-    function disposeEach(...audioNodes) {
-      audioNodes.forEach(node => node.dispose());
-    }
-  }, []);
-
-  useEffect(function addKeyboardListener() {
-    window.addEventListener("keydown", e => handleKeyDown(e));
-    window.addEventListener("keyup", e => handleKeyUp(e));
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("keyup", handleKeyUp);
-    };
-  }, []);
-
-  const handleKeyDown = e => {
-    if (!isPlayableKey(e.which)) return;
-
-    const pitch = Tone.Frequency(keyMidiMappings[e.which], "midi");
-    synth.current.triggerAttack(pitch);
-  };
-
-  const handleKeyUp = e => {
-    if (!isPlayableKey(e.which)) return;
-
-    synth.current.triggerRelease();
-  };
-
-  const isPlayableKey = keyWhich => {
-    return typeof keyMidiMappings[keyWhich] !== undefined;
-  };
+      return () => {
+        window.removeEventListener("keydown", handleKeyDown);
+        window.removeEventListener("keyup", handleKeyUp);
+      };
+    },
+    [synth]
+  );
 
   const handleClick = e => {
     if (typeof synth !== "object") return null;
@@ -110,29 +78,39 @@ export default function AudioGUI() {
     synth.current.triggerAttackRelease(pitch, attackLength);
   };
 
-  const handleChange = e => {
-    const { name, value } = e.target;
+  const handleChange = useCallback(
+    e => {
+      const { name, value } = e.target;
 
-    if (name === "distortion.wet") {
-      distortion.current.wet.set({ value: Number(value) });
-    } else if (name === "reverb.wet") {
-      reverb.current.wet.set({ value: Number(value) });
-    } else if (name === "reverb.decay") {
-      reverb.current.set({ decay: Number(value) });
-    } else if (name === "reverb.preDelay") {
-      reverb.current.set({ preDelay: Number(value) });
-    } else if (name === "synth.envelope.attack") {
-      synth.current.envelope.set({ attack: Number(value) });
-    } else if (name === "synth.envelope.sustain") {
-      synth.current.envelope.set({ sustain: Number(value) });
-    } else if (name === "synth.envelope.decay") {
-      synth.current.envelope.set({ decay: Number(value) });
-    } else if (name === "synth.envelope.release") {
-      synth.current.envelope.set({ release: Number(value) });
-    }
+      // HACK: make this dynamic, e.g.
+      // const updateAudioEffect = (name, value) => {
+      //   const [foo, bar, ...baz] = name.split(".");
+      //   Function(`${name}.current.set({${baz}: ${value}})`);
+      // };
+      // updateAudioEffect(name, value)
 
-    forceUpdate();
-  };
+      if (name === "distortion.wet") {
+        distortion.current.wet.set({ value: Number(value) });
+      } else if (name === "reverb.wet") {
+        reverb.current.wet.set({ value: Number(value) });
+      } else if (name === "reverb.decay") {
+        reverb.current.set({ decay: Number(value) });
+      } else if (name === "reverb.preDelay") {
+        reverb.current.set({ preDelay: Number(value) });
+      } else if (name === "synth.envelope.attack") {
+        synth.current.envelope.set({ attack: Number(value) });
+      } else if (name === "synth.envelope.sustain") {
+        synth.current.envelope.set({ sustain: Number(value) });
+      } else if (name === "synth.envelope.decay") {
+        synth.current.envelope.set({ decay: Number(value) });
+      } else if (name === "synth.envelope.release") {
+        synth.current.envelope.set({ release: Number(value) });
+      }
+
+      forceUpdate();
+    },
+    [reverb, synth, distortion, forceUpdate]
+  );
 
   if (!isLoaded) {
     return <Loading />;
@@ -143,7 +121,7 @@ export default function AudioGUI() {
         handleClick={handleClick}
         controls={
           <>
-            <SynthControls synth={synth.current} handleChange={handleChange} />
+            <EnvelopeControls synth={synth} handleChange={handleChange} />
             <DistortionControls
               distortion={distortion}
               handleChange={handleChange}

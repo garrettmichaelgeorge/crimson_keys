@@ -10,7 +10,7 @@ export default function KeyboardControlSlider({
   step,
 }) {
   return (
-    <label>
+    <label className="keyboard-control keyboard-control-slider">
       <input
         type="range"
         name={name}

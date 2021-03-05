@@ -1,9 +1,11 @@
-import React, { useState, useEffect, useRef, useReducer } from "react";
+import { useState, useEffect, useRef, useReducer } from "react";
 import { mToF } from "../util/converters";
 import { reducer, initialState } from "../store/reducer";
 
 export default function AudioEngine({ events }) {
-  const [playingNotes, setPlayingNotes] = useState([]);
+  // Note: This is experimental only and not currently in use
+
+  const [, setPlayingNotes] = useState([]);
   const [state, dispatch] = useReducer(reducer, initialState);
   const audioContext = useRef();
 

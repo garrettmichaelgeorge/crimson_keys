@@ -3,7 +3,7 @@ export { default as AudioGUI } from "./AudioGUI";
 export { default as Keyboard } from "./Keyboard";
 export { default as KeyboardControls } from "./KeyboardControls";
 export { default as KeyboardControlSlider } from "./KeyboardControlSlider";
-export { default as SynthControls } from "./SynthControls";
+export { default as EnvelopeControls } from "./EnvelopeControls";
 export { default as DistortionControls } from "./DistortionControls";
 export { default as ReverbControls } from "./ReverbControls";
 export { default as Header } from "./Header";
