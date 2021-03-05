@@ -78,7 +78,7 @@ export default function AudioGUI() {
       const pitch = e.target.attributes.value.value;
       synth.current.triggerAttackRelease(pitch, attackLength);
     },
-    [synth]
+    [synth, attackLength]
   );
 
   const handleChange = useCallback(
